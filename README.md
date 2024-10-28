@@ -61,6 +61,8 @@ Curious about my work? Here are some places you can check out:
 
 ---
 
+![My Image](https://tse3.mm.bing.net/th?id=OIG4.94E8NipHRHPUCkrmPlI_&pid=ImgGn)
+
 ## 🍳 Fun Facts
 
 - I believe breakfast is the most important meal of the day—especially if it includes coffee and a side of code!
