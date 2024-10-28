@@ -1,3 +1,5 @@
+---
+
 # 🐇 RabbitRedux Model Card
 
 ### 🌟 Key Contributions
@@ -66,3 +68,173 @@ Curious about my work? Here are some places you can check out:
 ## 🤔 Let’s Connect!
 
 I’m always excited to meet fellow tech enthusiasts and like-minded individuals. If you have questions, suggestions, or just want to chat about tech, feel free to reach out. Let’s make the open-source community a little brighter, one line of code at a time!
+
+---
+
+## Model Details
+
+### Model Description
+
+This model card serves as a base template for new models and has been generated to provide an overview of the WhiteRabbitNeo Code Classification Model and its contributions.
+
+- **Developed by:** Stephen de Jager (canstralian)
+- **Funded by:** Self-funded
+- **Shared by:** Community contributions
+- **Model type:** Text classification (code)
+- **Language(s) (NLP):** English
+- **License:** Apache 2.0 License
+- **Finetuned from model:** replit/replit-code-v1_5-3b
+
+### Model Sources
+
+- **Repository:** [WhiteRabbitNeo](https://github.com/canstralian/WhiteRabbitNeo)
+- **Paper:** [WhiteRabbitNeo Research Paper](#) (link can be added when available)
+- **Demo:** [WhiteRabbitNeo Demo](#) (link can be added when available)
+
+## Uses
+
+### Direct Use
+
+This model is intended for direct use in code classification tasks without fine-tuning.
+
+### Downstream Use
+
+The model can be fine-tuned for specific tasks or integrated into larger applications focused on cybersecurity and code analysis.
+
+### Out-of-Scope Use
+
+The model is not designed for use in contexts that may lead to malicious activities or where code quality is critical without proper review.
+
+## Bias, Risks, and Limitations
+
+This section is meant to convey both technical and sociotechnical limitations. 
+
+### Recommendations
+
+Users should be made aware of the risks, biases, and limitations of the model, ensuring informed decisions when utilizing its capabilities.
+
+## How to Get Started with the Model
+
+Use the code below to get started with the model:
+
+```python
+# Sample code to load and use the model
+from transformers import pipeline
+
+# Load the model
+classifier = pipeline("text-classification", model="canstralian/WhiteRabbitNeo")
+
+# Example input
+code_snippet = "def hello_world():\n    print('Hello, world!')"
+result = classifier(code_snippet)
+print(result)
+```
+
+## Training Details
+
+### Training Data
+
+The model is trained on diverse datasets focused on code functions, including general-purpose and cybersecurity-specific datasets.
+
+### Training Procedure
+
+#### Preprocessing
+
+- Tokenization of code snippets
+- Removal of non-code elements to maintain focus on functionality
+
+#### Training Hyperparameters
+
+- **Training regime:** Adaptive learning rate, batch size of 32, and early stopping based on validation loss.
+
+## Evaluation
+
+### Testing Data, Factors & Metrics
+
+#### Testing Data
+
+The model is evaluated using a separate dataset not included in the training phase, ensuring unbiased performance metrics.
+
+#### Factors
+
+- Code complexity
+- Contextual relevance in cybersecurity
+
+#### Metrics
+
+- Accuracy
+- F1 score
+
+### Results
+
+#### Summary
+
+The model shows high accuracy and F1 scores across various code function classifications, particularly in cybersecurity contexts.
+
+## Model Examination
+
+The model's performance can be examined further by conducting detailed analyses on specific datasets to understand its strengths and limitations better.
+
+## Environmental Impact
+
+Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
+
+- **Hardware Type:** NVIDIA A100 GPU (example)
+- **Hours used:** 100 hours (example)
+- **Cloud Provider:** AWS
+- **Compute Region:** US-East (example)
+- **Carbon Emitted:** 0.5 kg CO2 (example)
+
+## Technical Specifications
+
+### Model Architecture and Objective
+
+The architecture is based on the transformer model, specifically designed for understanding and classifying code snippets effectively.
+
+### Compute Infrastructure
+
+#### Hardware
+
+- NVIDIA A100 GPU (example)
+
+#### Software
+
+- Python 3.8
+- Transformers library version 4.6.1
+
+## Citation
+
+**BibTeX:**
+
+```bibtex
+@misc{whiteRabbitNeo,
+  author = {Stephen de Jager},
+  title = {WhiteRabbitNeo Code Classification Model},
+  year = {2024},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/canstralian/WhiteRabbitNeo}}
+}
+```
+
+**APA:**
+
+de Jager, S. (2024). *WhiteRabbitNeo Code Classification Model*. GitHub. Retrieved from https://github.com/canstralian/WhiteRabbitNeo
+
+## Glossary
+
+- **Code Classification**: The task of categorizing code snippets based on their functionality or context.
+- **Transformer**: A model architecture that uses self-attention mechanisms for processing sequences of data, commonly used in NLP tasks.
+
+## More Information
+
+For more information or updates, follow me on GitHub or reach out via the contact section below.
+
+## Model Card Authors
+
+- Stephen de Jager (canstralian)
+
+## Model Card Contact
+
+For inquiries regarding this model, please reach out to me via my GitHub profile: [canstralian](https://github.com/canstralian).
+
+---
