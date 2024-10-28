@@ -1,5 +1,3 @@
----
-
 # 🐇 RabbitRedux Model Card
 
 ### 🌟 Key Contributions
