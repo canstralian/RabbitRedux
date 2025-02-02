@@ -1,5 +1,5 @@
-flask
-transformers
+gradio 
+requests 
+flask 
+transformers 
 torch
-requests
-gunicorn
