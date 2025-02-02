@@ -27,3 +27,25 @@ jobs:
     - name: Run tests
       run: |
         pytest
+
+    - name: pylinter
+      uses: programmingwithalex/pylinter@v1.4.3
+      with:
+        # Optional: specify the directory to run linters on
+        python-root: .
+        # Optional: specify flags for flake8
+        flake8-flags: '--max-line-length=79'
+        # Optional: specify flags for mypy
+        mypy-flags: '--ignore-missing-imports'
+        # Optional: fail the job if isort changes are needed
+        fail-on-isort: true
+        # Optional: skip flake8 checks
+        skip-flake8: false
+        # Optional: skip mypy checks
+        skip-mypy: false
+        # Optional: skip isort checks
+        skip-isort: false
+        # Optional: list of directories and/or files to ignore for mypy
+        mypy-ignore-dirs-files: 'tests/*'
+        # Optional: requirements file for mypy to prevent library stub missing errors
+        requirements-file: 'requirements.txt'
