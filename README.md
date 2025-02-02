@@ -4,8 +4,8 @@ language:
 tags: 
   - code-classification
   - cybersecurity
-  - machine-learning
   - transformers
+  - machine-learning
   - huggingface
 license: apache-2.0
 library_name: transformers
@@ -29,64 +29,92 @@ model-index:
             value: 94.5%
 ---
 
-# 🐇 RabbitRedux API - WhiteRabbitNeo Code Classification
+# 🐇 WhiteRabbitNeo Code Classification Model
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/canstralian/RabbitRedux/ci.yml)
-![Coverage Status](https://img.shields.io/codecov/c/github/canstralian/RabbitRedux)
-![License](https://img.shields.io/github/license/canstralian/RabbitRedux)
+## 🔍 Overview
+The **WhiteRabbitNeo Code Classification Model** is a transformer-based AI designed for **code classification** in **cybersecurity** and **software engineering** contexts. 
 
-## 🚀 Overview
-RabbitRedux is a Flask-based API that serves **WhiteRabbitNeo**, a **Transformer-based model** designed for **code classification** in cybersecurity and software engineering.
-
-### 🌟 Features
-- **Text Classification API**: Classifies code snippets.
-- **Fast & Scalable**: Runs with **Gunicorn** inside a **Docker container**.
-- **AI-Powered**: Uses **Hugging Face Transformers**.
+### 🧠 Features
+✅ **Pre-trained on diverse datasets**  
+✅ **Fine-tuned for cybersecurity-focused classification**  
+✅ **Optimized for Python, JavaScript, and more**  
 
 ---
 
-## 🛠️ Installation & Usage
+## 🚀 Usage
 
-### **1️⃣ Clone Repository**
+### **1️⃣ Install Dependencies**
 ```sh
-git clone https://github.com/canstralian/RabbitRedux.git
-cd RabbitRedux
+pip install transformers torch
 
-2️⃣ Install Dependencies
+2️⃣ Load the Model
 
-pip install -r requirements.txt
+from transformers import pipeline
 
-3️⃣ Run Locally
+# Load WhiteRabbitNeo
+classifier = pipeline("text-classification", model="canstralian/WhiteRabbitNeo")
 
-python wsgi.py
+# Example classification
+code_snippet = "def hello_world():\n    print('Hello, world!')"
+result = classifier(code_snippet)
+print(result)
 
-Visit http://localhost:5000 to test the API.
+3️⃣ Example Output
 
-4️⃣ Run with Docker
+[
+  {"label": "Python Function", "score": 0.98}
+]
+
+📊 Model Details
+   •   Developed by: canstralian
+   •   Architecture: Transformer-based (Fine-tuned)
+   •   Training Datasets:
+      •   WhiteRabbitNeo Chapters 1 & 2
+      •   General & Cybersecurity code functions
+   •   Fine-tuned from: replit/replit-code-v1_5-3b
+   •   License: Apache 2.0
+
+🏆 Performance
+
+Metric	Value
+Accuracy	94.5%
+F1 Score	92.8%
+
+🔥 Deployment
+
+You can deploy this model as an API using Hugging Face Spaces.
+
+Deploy with Docker
 
 docker build -t rabbitredux .
 docker run -p 5000:5000 rabbitredux
 
-🔥 API Endpoints
+Use with FastAPI
 
-Method	Endpoint	Description
-GET	/	Get project details
-POST	/classify	Classify a code snippet
+If you want a scalable API:
 
-Example Request
+pip install fastapi uvicorn
 
-curl -X POST "http://localhost:5000/classify" -H "Content-Type: application/json" -d '{"code": "def hello(): print(\"Hello, world!\")"}'
+Then, create a FastAPI server:
 
-Example Response
+from fastapi import FastAPI
+from transformers import pipeline
 
-{
-  "code": "def hello(): print(\"Hello, world!\")",
-  "classification": [{"label": "Python Function", "score": 0.98}]
-}
+app = FastAPI()
+classifier = pipeline("text-classification", model="canstralian/WhiteRabbitNeo")
+
+@app.post("/classify/")
+def classify_code(data: dict):
+    return {"classification": classifier(data["code"])}
+
+Run with:
+
+uvicorn app:app --host 0.0.0.0 --port 8000
 
 📚 Useful Resources
    •   GitHub: canstralian
-   •   Replit: canstralian
+   •   Hugging Face Model: WhiteRabbitNeo
+   •   Replit Profile: canstralian
 
 📜 License
 
@@ -94,5 +122,10 @@ Licensed under the Apache 2.0 License.
 
 ---
 
+### **🚀 Why This Model Card?**
+✅ **Hugging Face Metadata** for discoverability  
+✅ **Clear Examples** with Python usage  
+✅ **Performance Metrics** for credibility  
+✅ **Deployment Instructions** for practical use  
 
-
+Would you like **Gradio UI integration** for an interactive demo? 🚀
