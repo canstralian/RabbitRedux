@@ -11,17 +11,7 @@ LEARNING_RATE = 5e-5
 MAX_LENGTH = 512
 
 def load_and_preprocess_data(dataset_name: str, tokenizer: AutoTokenizer, batch_size: int) -> dict:
-    """
-    Loads and preprocesses the dataset for training and evaluation.
-
-    Args:
-        dataset_name (str): The name of the dataset to load.
-        tokenizer (AutoTokenizer): The tokenizer to use for preprocessing.
-        batch_size (int): The batch size for tokenization.
-
-    Returns:
-        dict: A dictionary containing the tokenized training and evaluation datasets.
-    """
+    """Loads and preprocesses the dataset."""
     validate_inputs(dataset_name, tokenizer, batch_size)
 
     dataset = load_dataset(dataset_name)
@@ -33,14 +23,7 @@ def load_and_preprocess_data(dataset_name: str, tokenizer: AutoTokenizer, batch_
     return tokenized_datasets
 
 def validate_inputs(dataset_name: str, tokenizer: AutoTokenizer, batch_size: int):
-    """
-    Validates the inputs for loading and preprocessing data.
-
-    Args:
-        dataset_name (str): The name of the dataset to load.
-        tokenizer (AutoTokenizer): The tokenizer to use for preprocessing.
-        batch_size (int): The batch size for tokenization.
-    """
+    """Validates the inputs for data loading and preprocessing."""
     if not isinstance(dataset_name, str):
         raise ValueError(f"Expected 'dataset_name' to be a string, got {type(dataset_name)}.")
     if not isinstance(tokenizer, AutoTokenizer):
@@ -49,50 +32,20 @@ def validate_inputs(dataset_name: str, tokenizer: AutoTokenizer, batch_size: int
         raise ValueError(f"Expected 'batch_size' to be a positive integer, got {batch_size}.")
 
 def initialize_model(model_name: str, num_labels: int) -> AutoModelForSequenceClassification:
-    """
-    Initializes the model for sequence classification.
-
-    Args:
-        model_name (str): The name of the pre-trained model.
-        num_labels (int): The number of labels for classification.
-
-    Returns:
-        AutoModelForSequenceClassification: The initialized model.
-    """
+    """Initializes the model."""
     validate_model_inputs(model_name, num_labels)
-
     model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
     return model
 
 def validate_model_inputs(model_name: str, num_labels: int):
-    """
-    Validates the inputs for initializing the model.
-
-    Args:
-        model_name (str): The name of the pre-trained model.
-        num_labels (int): The number of labels for classification.
-    """
+    """Validates the inputs for model initialization."""
     if not isinstance(model_name, str):
         raise ValueError(f"Expected 'model_name' to be a string, got {type(model_name)}.")
     if not isinstance(num_labels, int) or num_labels <= 0:
         raise ValueError(f"Expected 'num_labels' to be a positive integer, got {num_labels}.")
 
 def train_model(model, train_dataset, eval_dataset, output_dir: str, epochs: int, batch_size: int, learning_rate: float):
-    """
-    Trains the model using the provided datasets and parameters.
-
-    Args:
-        model (AutoModelForSequenceClassification): The model to train.
-        train_dataset (Dataset): The training dataset.
-        eval_dataset (Dataset): The evaluation dataset.
-        output_dir (str): The directory to save the trained model.
-        epochs (int): The number of training epochs.
-        batch_size (int): The batch size for training.
-        learning_rate (float): The learning rate for training.
-
-    Returns:
-        Trainer: The Trainer instance used for training.
-    """
+    """Trains the model."""
     validate_training_inputs(model, train_dataset, eval_dataset, output_dir, epochs, batch_size, learning_rate)
 
     training_args = TrainingArguments(
@@ -103,6 +56,7 @@ def train_model(model, train_dataset, eval_dataset, output_dir: str, epochs: int
         per_device_eval_batch_size=batch_size,
         num_train_epochs=epochs,
         weight_decay=0.01,
+        fp16=True  # Enable mixed precision training for faster training
     )
 
     trainer = Trainer(
@@ -117,18 +71,7 @@ def train_model(model, train_dataset, eval_dataset, output_dir: str, epochs: int
     return trainer
 
 def validate_training_inputs(model, train_dataset, eval_dataset, output_dir, epochs, batch_size, learning_rate):
-    """
-    Validates the inputs for training the model.
-
-    Args:
-        model (AutoModelForSequenceClassification): The model to train.
-        train_dataset (Dataset): The training dataset.
-        eval_dataset (Dataset): The evaluation dataset.
-        output_dir (str): The directory to save the trained model.
-        epochs (int): The number of training epochs.
-        batch_size (int): The batch size for training.
-        learning_rate (float): The learning rate for training.
-    """
+    """Validates training inputs."""
     if not isinstance(model, AutoModelForSequenceClassification):
         raise ValueError(f"Expected 'model' to be an instance of AutoModelForSequenceClassification, got {type(model)}.")
     if not isinstance(train_dataset, dict) or 'train' not in train_dataset:
@@ -145,9 +88,7 @@ def validate_training_inputs(model, train_dataset, eval_dataset, output_dir, epo
         raise ValueError(f"Expected 'learning_rate' to be a positive number, got {learning_rate}.")
 
 def main():
-    """
-    Main function to load data, initialize the model, and train it.
-    """
+    """Main function."""
     tokenized_datasets = load_and_preprocess_data(
         'WhiteRabbitNeo/Code-Functions-Level-Cyber',
         AutoTokenizer.from_pretrained(MODEL_NAME),
@@ -160,4 +101,13 @@ def main():
         model=model,
         train_dataset=tokenized_datasets,
         eval_dataset=tokenized_datasets,
- 
+        output_dir=OUTPUT_DIR,
+        epochs=EPOCHS,
+        batch_size=BATCH_SIZE,
+        learning_rate=LEARNING_RATE
+    )
+
+if __name__ == "__main__":
+    main()
+
+
