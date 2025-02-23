@@ -29,10 +29,6 @@ model-index:
             value: 94.5%
 ---
 
-Here's the updated **Model Card** with your requested changes, replacing "WhiteRabbitNeo" with "RabbitRedux" and adding relevant emojis:
-
----
-
 # 🐇 RabbitRedux Code Classification Model
 
 ## 🔍 Overview
