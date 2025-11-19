@@ -41,14 +41,32 @@ The **RabbitRedux Code Classification Model** is a transformer-based AI designed
 
 ---
 
-## 🚀 Usage
+## 🚀 Quick Start
 
-### **1️⃣ Install Dependencies**
+### **Get Started in 5 Minutes**
+
+See the [Quick Start Guide](QUICKSTART.md) for the fastest way to get RabbitRedux running!
+
+**TL;DR:**
 ```sh
-pip install transformers torch
+# Clone and install
+git clone https://github.com/canstralian/RabbitRedux.git
+cd RabbitRedux
+pip install -r requirements.txt
+
+# Run the server
+python app.py
+
+# Test it
+curl -X POST http://localhost:5000/classify \
+  -H "Content-Type: application/json" \
+  -d '{"code": "def hello(): print(\"Hello!\")"}'
 ```
 
-### **2️⃣ Load the Model**
+### **Using as a Library**
+
+You can also use the model directly in your Python code:
+
 ```python
 from transformers import pipeline
 
@@ -61,7 +79,7 @@ result = classifier(code_snippet)
 print(result)
 ```
 
-### **3️⃣ Example Output**
+**Example Output:**
 ```json
 [
   {"label": "Python Function", "score": 0.98}
@@ -95,42 +113,80 @@ print(result)
 
 ## 🔥 Deployment
 
-You can deploy this model as an API using Hugging Face Spaces.
+### **Quick Start**
+
+1. **Install dependencies**:
+```sh
+pip install -r requirements.txt
+```
+
+2. **Set up environment variables**:
+```sh
+cp .env.example .env
+# Edit .env with your settings
+```
+
+3. **Run the development server**:
+```sh
+python app.py
+```
 
 ### **Deploy with Docker**
+
+Build and run:
 ```sh
 docker build -t rabbitredux .
-docker run -p 5000:5000 rabbitredux
+docker run -p 5000:5000 -e SECRET_KEY=your-secret-key rabbitredux
 ```
 
-### **Use with FastAPI**
-If you want a scalable API:
+Or use docker-compose:
+```sh
+docker-compose up -d
+```
+
+### **Production Deployment with Gunicorn**
 
 ```sh
-pip install fastapi uvicorn
+export FLASK_ENV=production
+export SECRET_KEY=$(python -c 'import secrets; print(secrets.token_hex(32))')
+gunicorn --bind 0.0.0.0:5000 --workers 4 --threads 2 --timeout 120 wsgi:app
 ```
 
-Then, create a FastAPI server:
-
-```python
-from fastapi import FastAPI
-from transformers import pipeline
-
-app = FastAPI()
-classifier = pipeline("text-classification", model="canstralian/RabbitRedux")
-
-@app.post("/classify/")
-def classify_code(data: dict):
-    return {"classification": classifier(data["code"])}
-```
-
-Run with:
-
-```sh
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ---
+
+## 📖 Documentation
+
+- **[API Documentation](API.md)**: Complete API reference and usage examples
+- **[Deployment Guide](DEPLOYMENT.md)**: Detailed deployment instructions for various platforms
+- **[Security Policy](SECURITY.md)**: Security best practices and reporting vulnerabilities
+- **[Contributing Guidelines](.github/CONTRIBUTING.md)**: How to contribute to the project
+
+## 🧪 Testing
+
+Run the test suite:
+```sh
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Run tests
+pytest -v
+
+# Run with coverage
+pytest --cov=app --cov-report=html
+```
+
+## 🔒 Security
+
+For security issues, please see [SECURITY.md](SECURITY.md) for reporting guidelines.
+
+Key security features:
+- ✅ Input validation (max 10,000 characters)
+- ✅ Secure configuration management
+- ✅ Health check endpoint for monitoring
+- ✅ Production-ready Docker configuration
+- ✅ Non-root container user
 
 ## 📚 Useful Resources
    • **GitHub**: [canstralian](https://github.com/canstralian)  
@@ -141,4 +197,4 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 ## 📜 License
 
-Licensed under the **MIT License**.
+Licensed under the **Apache 2.0 License**. See [LICENSE.md](LICENSE.md) for details.
