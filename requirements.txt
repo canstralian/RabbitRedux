@@ -1,5 +1,20 @@
-gradio 
-requests 
-flask 
-transformers 
-torch
+# Web Framework
+flask>=3.0.0
+gunicorn>=21.2.0
+
+# ML/AI
+transformers>=4.30.0
+torch>=2.0.0
+
+# UI Interface
+gradio>=4.0.0
+
+# Utilities
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# Development Dependencies (optional, install with pip install -r requirements-dev.txt)
+# pytest>=7.4.0
+# flake8>=6.0.0
+# pylint>=3.0.0
+# black>=23.0.0
