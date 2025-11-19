@@ -28,7 +28,7 @@ class DatabaseConfig:
     def __init__(self):
         self.database_url = os.getenv(
             'DATABASE_URL',
-            'postgresql://postgres:postgres@localhost:5432/rabbitredux'
+            'postgresql://user:password@localhost:5432/rabbitredux'
         )
         
         # Environment detection
