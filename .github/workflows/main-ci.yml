@@ -1,0 +1,184 @@
+name: Main CI Pipeline
+
+# Trigger on commits to main branch and pull requests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  # Job 1: Code Quality and Linting
+  lint:
+    name: Code Linting & Format Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: 'pip'
+    
+    - name: Install linting dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8 pylint
+        
+    - name: Check code formatting with Black
+      run: |
+        # Check if code is formatted according to Black style
+        # Fail the build if formatting is not compliant
+        black --check --diff .
+      continue-on-error: false
+        
+    - name: Lint with Flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,venv,ENV,env,.venv
+        # Check for code quality issues (warnings treated as failures)
+        flake8 . --count --max-complexity=10 --max-line-length=127 --statistics --exclude=.git,__pycache__,venv,ENV,env,.venv
+      continue-on-error: false
+    
+    - name: Lint with Pylint
+      run: |
+        # Run pylint on all Python files
+        find . -type f -name "*.py" ! -path "./venv/*" ! -path "./.venv/*" ! -path "./ENV/*" | xargs pylint --fail-under=7.0 || true
+      continue-on-error: true
+    
+    - name: Generate linting report
+      if: always()
+      run: |
+        echo "## Linting Results" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Code formatting and linting checks completed" >> $GITHUB_STEP_SUMMARY
+
+  # Job 2: Testing
+  test:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov pytest-html flask
+        if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+    
+    - name: Run tests with coverage
+      run: |
+        # Run pytest with coverage reporting
+        PYTHONPATH=/home/runner/work/RabbitRedux/RabbitRedux pytest tests/ \
+          --verbose \
+          --cov=app \
+          --cov=. \
+          --cov-report=xml \
+          --cov-report=html \
+          --cov-report=term \
+          --html=test-results/report.html \
+          --self-contained-html
+      continue-on-error: false
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: test-results/
+        retention-days: 30
+    
+    - name: Upload coverage reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-${{ matrix.python-version }}
+        path: |
+          coverage.xml
+          htmlcov/
+        retention-days: 30
+    
+    - name: Generate test summary
+      if: always()
+      run: |
+        echo "## Test Results (Python ${{ matrix.python-version }})" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Tests completed" >> $GITHUB_STEP_SUMMARY
+        if [ -f coverage.xml ]; then
+          echo "📊 Coverage report generated" >> $GITHUB_STEP_SUMMARY
+        fi
+
+  # Job 3: Build validation
+  build:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flask
+        if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+    
+    - name: Validate application startup
+      run: |
+        # Try to import and create the Flask app
+        python -c "from app import create_app; app = create_app(); print('✅ Application created successfully')"
+    
+    - name: Generate build summary
+      run: |
+        echo "## Build Validation" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Application build successful" >> $GITHUB_STEP_SUMMARY
+        echo "✅ All imports validated" >> $GITHUB_STEP_SUMMARY
+
+  # Job 4: Status check (required for PR merging)
+  ci-success:
+    name: CI Pipeline Success
+    runs-on: ubuntu-latest
+    needs: [lint, test, build]
+    if: always()
+    
+    steps:
+    - name: Check if all jobs succeeded
+      run: |
+        if [ "${{ needs.lint.result }}" != "success" ] || \
+           [ "${{ needs.test.result }}" != "success" ] || \
+           [ "${{ needs.build.result }}" != "success" ]; then
+          echo "❌ CI Pipeline failed"
+          echo "## ❌ CI Pipeline Failed" >> $GITHUB_STEP_SUMMARY
+          echo "One or more jobs failed. Please check the logs above." >> $GITHUB_STEP_SUMMARY
+          exit 1
+        else
+          echo "✅ All CI checks passed"
+          echo "## ✅ CI Pipeline Passed" >> $GITHUB_STEP_SUMMARY
+          echo "All linting, testing, and build validation checks passed successfully!" >> $GITHUB_STEP_SUMMARY
+        fi

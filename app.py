@@ -6,22 +6,26 @@ app = Flask(__name__)
 # Load the classifier once at startup
 classifier = load_classifier()
 
-@app.route('/')
+
+@app.route("/")
 def home():
     """Root endpoint displaying project information."""
-    return jsonify({
-        "project": "RabbitRedux - WhiteRabbitNeo Code Classification Model",
-        "description": "A Transformer-based model designed for text classification of code snippets.",
-        "repository": "https://github.com/canstralian/WhiteRabbitNeo",
-        "author": "Stephen de Jager (canstralian)",
-        "license": "Apache 2.0"
-    })
+    return jsonify(
+        {
+            "project": "RabbitRedux - WhiteRabbitNeo Code Classification Model",
+            "description": "A Transformer-based model designed for text classification of code snippets.",
+            "repository": "https://github.com/canstralian/WhiteRabbitNeo",
+            "author": "Stephen de Jager (canstralian)",
+            "license": "Apache 2.0",
+        }
+    )
 
-@app.route('/classify', methods=['POST'])
+
+@app.route("/classify", methods=["POST"])
 def classify_code_endpoint():
     """API endpoint to classify code snippets."""
     data = request.get_json()
-    
+
     if not data or "code" not in data:
         return jsonify({"error": "Missing 'code' field in request"}), 400
 
