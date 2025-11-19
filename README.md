@@ -41,14 +41,32 @@ The **RabbitRedux Code Classification Model** is a transformer-based AI designed
 
 ---
 
-## 🚀 Usage
+## 🚀 Quick Start
 
-### **1️⃣ Install Dependencies**
+### **Get Started in 5 Minutes**
+
+See the [Quick Start Guide](QUICKSTART.md) for the fastest way to get RabbitRedux running!
+
+**TL;DR:**
 ```sh
-pip install transformers torch
+# Clone and install
+git clone https://github.com/canstralian/RabbitRedux.git
+cd RabbitRedux
+pip install -r requirements.txt
+
+# Run the server
+python app.py
+
+# Test it
+curl -X POST http://localhost:5000/classify \
+  -H "Content-Type: application/json" \
+  -d '{"code": "def hello(): print(\"Hello!\")"}'
 ```
 
-### **2️⃣ Load the Model**
+### **Using as a Library**
+
+You can also use the model directly in your Python code:
+
 ```python
 from transformers import pipeline
 
@@ -61,7 +79,7 @@ result = classifier(code_snippet)
 print(result)
 ```
 
-### **3️⃣ Example Output**
+**Example Output:**
 ```json
 [
   {"label": "Python Function", "score": 0.98}
