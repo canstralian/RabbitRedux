@@ -377,7 +377,7 @@ flake8 .
 
 ### File System Quirks
 
-- **Typo Alert**: `.gitingnore` should be `.gitignore` (consider fixing this)
+- **Git ignore config**: The repository uses a standard `.gitignore` file.
 - **No `package.json`**: This is a Python project, not Node.js
 
 ### Model References
