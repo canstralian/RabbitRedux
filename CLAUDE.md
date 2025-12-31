@@ -292,7 +292,9 @@ Environment-based configuration:
 ```python
 # app/config.py
 DEBUG = os.getenv("FLASK_DEBUG", False)
-SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable must be set and non-empty")
 ```
 
 ### 5. Training Best Practices
