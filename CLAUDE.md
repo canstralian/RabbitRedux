@@ -58,7 +58,7 @@ RabbitRedux/
 ├── wsgi.py                           # WSGI entry for production
 ├── Dockerfile                        # Docker configuration
 ├── requirements.txt                  # Python dependencies
-├── .gitingnore                       # Git ignore (misspelled, should be .gitignore)
+├── .gitignore                        # Git ignore
 ├── LICENSE.md
 └── README.md
 ```
@@ -291,8 +291,16 @@ All API endpoints follow this pattern:
 Environment-based configuration:
 ```python
 # app/config.py
-DEBUG = os.getenv("FLASK_DEBUG", True)
-SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
+DEBUG = os.getenv("FLASK_DEBUG", False)
+TESTING = os.getenv("TESTING", False)
+
+# SECRET_KEY must be set in production, but allow a default for testing
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    if TESTING or os.getenv("FLASK_ENV") == "testing":
+        SECRET_KEY = "test-secret-key-insecure"
+    else:
+        raise RuntimeError("SECRET_KEY environment variable must be set and non-empty")
 ```
 
 ### 5. Training Best Practices
@@ -375,16 +383,17 @@ flake8 .
 
 ### File System Quirks
 
-- **Typo Alert**: `.gitingnore` should be `.gitignore` (consider fixing this)
+- **Git ignore config**: The repository uses a standard `.gitignore` file.
 - **No `package.json`**: This is a Python project, not Node.js
 
 ### Model References
 
-The codebase references multiple model names:
+The codebase references two related model names:
 - `canstralian/RabbitRedux` (in README.md)
 - `canstralian/WhiteRabbitNeo` (in routes.py, classifier.py)
 
-**Action Required**: Verify which model is the canonical version.
+**Canonical model**: Use `canstralian/RabbitRedux` as the primary/production model for all new deployments, examples, and configuration.
+`canstralian/WhiteRabbitNeo` is the upstream/base model used during pretraining and appears in dataset names and some legacy code; reference it only when you explicitly need to discuss the base checkpoint or training lineage.
 
 ### Training Datasets
 
