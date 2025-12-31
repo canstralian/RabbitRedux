@@ -1,5 +1,64 @@
-gradio 
-requests 
-flask 
-transformers 
-torch
+# Core ML and UI
+gradio>=4.0.0
+transformers>=4.30.0
+torch>=2.0.0
+tokenizers>=0.13.0
+accelerate>=0.20.0
+
+# API Frameworks
+flask>=3.0.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# ASGI/WSGI Servers
+gunicorn>=21.0.0
+
+# HTTP and Async
+requests>=2.31.0
+httpx>=0.25.0
+aiofiles>=23.0.0
+
+# Authentication & Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6
+
+# Monitoring and Metrics
+prometheus-client>=0.19.0
+prometheus-fastapi-instrumentator>=6.1.0
+
+# Environment & Configuration
+python-dotenv>=1.0.0
+
+# Database (optional, for future state management)
+sqlalchemy>=2.0.0
+alembic>=1.12.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+httpx>=0.25.0  # For FastAPI testing
+
+# Code Quality
+flake8>=6.1.0
+pylint>=3.0.0
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.6.0
+
+# Model Optimization
+onnx>=1.15.0
+onnxruntime>=1.16.0
+
+# Utilities
+rich>=13.0.0  # Better console output
+typer>=0.9.0  # CLI utilities
+
+# HuggingFace Hub
+huggingface-hub>=0.19.0
+
+# Caching
+redis>=5.0.0  # Optional, for distributed caching
