@@ -506,7 +506,7 @@ When modifying code:
 
 ## Additional Resources
 
-- **GitHub Repository**: https://github.com/canstralian/WhiteRabbitNeo
+- **GitHub Repository**: https://github.com/canstralian/RabbitRedux
 - **HuggingFace Model**: https://huggingface.co/canstralian/RabbitRedux
 - **Replit Profile**: https://replit.com/@canstralian
 - **Issue Templates**: `.github/ISSUE_TEMPLATE/`
