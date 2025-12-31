@@ -291,7 +291,7 @@ All API endpoints follow this pattern:
 Environment-based configuration:
 ```python
 # app/config.py
-DEBUG = os.getenv("FLASK_DEBUG", True)
+DEBUG = os.getenv("FLASK_DEBUG", False)
 SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
 ```
 
