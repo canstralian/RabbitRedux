@@ -3,6 +3,8 @@ from transformers import Trainer, TrainingArguments, AutoModelForSequenceClassif
 from datasets import load_dataset
 
 # Constants
+# TODO: Move constants to configuration file for easier management
+# TODO: Add support for different model architectures (BERT, RoBERTa, etc.)
 MODEL_NAME = 'distilbert-base-uncased'
 OUTPUT_DIR = './model_output'
 EPOCHS = 3
@@ -12,6 +14,9 @@ MAX_LENGTH = 512
 
 def load_and_preprocess_data(dataset_name: str, tokenizer: AutoTokenizer, batch_size: int) -> dict:
     """Loads and preprocesses the dataset."""
+    # TODO: Add data augmentation for code snippets
+    # TODO: Implement stratified sampling for imbalanced datasets
+    # TODO: Add dataset validation and quality checks
     validate_inputs(dataset_name, tokenizer, batch_size)
 
     dataset = load_dataset(dataset_name)
@@ -33,6 +38,9 @@ def validate_inputs(dataset_name: str, tokenizer: AutoTokenizer, batch_size: int
 
 def initialize_model(model_name: str, num_labels: int) -> AutoModelForSequenceClassification:
     """Initializes the model."""
+    # TODO: Add support for loading from checkpoint
+    # TODO: Implement model architecture search
+    # TODO: Add model compression options (pruning, quantization)
     validate_model_inputs(model_name, num_labels)
     model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
     return model
@@ -46,6 +54,10 @@ def validate_model_inputs(model_name: str, num_labels: int):
 
 def train_model(model, train_dataset, eval_dataset, output_dir: str, epochs: int, batch_size: int, learning_rate: float):
     """Trains the model."""
+    # TODO: Add early stopping based on validation metrics
+    # TODO: Implement learning rate scheduling (warmup, decay)
+    # TODO: Add model checkpointing with best model selection
+    # TODO: Integrate W&B or TensorBoard for experiment tracking
     validate_training_inputs(model, train_dataset, eval_dataset, output_dir, epochs, batch_size, learning_rate)
 
     training_args = TrainingArguments(

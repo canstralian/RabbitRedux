@@ -25,6 +25,9 @@ except Exception as e:
 
 def configure_routes(app: Flask):
     """Configure routes for the Flask application (app factory pattern)."""
+    # TODO: Add deprecation warnings for Flask endpoints
+    # TODO: Migrate remaining Flask users to FastAPI with compatibility layer
+    # TODO: Add metrics collection for Flask endpoint usage to plan sunset
 
     @app.route('/')
     def home():
@@ -54,6 +57,9 @@ def configure_routes(app: Flask):
     @app.route('/classify', methods=['POST'])
     def classify_code_endpoint():
         """API endpoint to classify code snippets."""
+        # TODO: Add request validation matching FastAPI implementation
+        # TODO: Implement rate limiting for Flask endpoints
+        # TODO: Add authentication support consistent with FastAPI
         if not classifier:
             logger.error("Model not loaded")
             return jsonify({"error": "Model not available"}), 503

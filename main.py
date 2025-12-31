@@ -133,6 +133,8 @@ if settings.enable_metrics:
     logger.info("Prometheus metrics enabled at /metrics")
 
 # Rate limiting storage (simple in-memory, use Redis for production)
+# TODO: Replace in-memory rate limiting with Redis for distributed deployments
+# TODO: Implement sliding window rate limiting for better fairness
 rate_limit_storage: Dict[str, List[float]] = {}
 
 
@@ -188,6 +190,8 @@ async def check_rate_limit(request: Request, api_key: str = Depends(verify_api_k
 @lru_cache()
 def get_classifier_cached(model_name: str, version: Optional[str] = None):
     """Cached classifier retrieval."""
+    # TODO: Add TTL-based cache expiration for model updates
+    # TODO: Implement cache warming on startup for frequently used models
     return load_classifier(model_name, version)
 
 
@@ -258,6 +262,9 @@ async def classify(
     - **model_version**: Optional model version/revision
     - **return_all_scores**: Return scores for all labels (default: false)
     """
+    # TODO: Add request caching for identical code snippets
+    # TODO: Implement async model inference for better concurrency
+    # TODO: Add confidence threshold filtering for low-confidence results
     start_time = time.time()
 
     try:
@@ -303,6 +310,9 @@ async def batch_classify_endpoint(
     - **model_version**: Optional model version/revision
     - **return_all_scores**: Return scores for all labels (default: false)
     """
+    # TODO: Implement dynamic batching based on available GPU memory
+    # TODO: Add priority queue for batch processing
+    # TODO: Support streaming results for large batches
     if not settings.enable_batch_classification:
         raise HTTPException(status_code=404, detail="Batch classification is disabled")
 
@@ -384,6 +394,9 @@ async def clear_cache(api_key: str = Depends(verify_api_key)):
 @app.on_event("startup")
 async def startup_event():
     """Initialize application on startup."""
+    # TODO: Add health check registration with orchestrator (K8s, ECS)
+    # TODO: Initialize database connection pool if persistence is added
+    # TODO: Pre-load multiple model versions for A/B testing
     logger.info(f"Starting {settings.app_name} v{settings.app_version}")
     logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug mode: {settings.debug}")

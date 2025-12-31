@@ -1,5 +1,8 @@
 # Multi-stage Dockerfile for RabbitRedux
 # Supports both Flask (legacy) and FastAPI (recommended)
+# TODO: Add NVIDIA GPU support with cuda base image
+# TODO: Implement build caching optimization for faster rebuilds
+# TODO: Add vulnerability scanning with trivy or grype
 
 # Build stage
 FROM python:3.10-slim as builder
@@ -11,6 +14,8 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # Install system dependencies
+# TODO: Pin system package versions for reproducible builds
+# TODO: Add security updates check during build
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
@@ -44,6 +49,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user for security
+# TODO: Add capability dropping for enhanced security
+# TODO: Implement read-only root filesystem
 RUN useradd -m -u 1000 -s /bin/bash appuser && \
     mkdir -p /app /app/model_cache /app/huggingface_cache && \
     chown -R appuser:appuser /app
@@ -62,6 +69,8 @@ COPY --chown=appuser:appuser . .
 USER appuser
 
 # Health check
+# TODO: Implement custom health check script with detailed diagnostics
+# TODO: Add readiness probe for Kubernetes deployments
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:${API_PORT}/health || exit 1
 
@@ -70,6 +79,9 @@ EXPOSE 8000 5000
 
 # Default to FastAPI (recommended)
 # For Flask, use: docker run ... gunicorn --bind 0.0.0.0:5000 wsgi:app
+# TODO: Add graceful shutdown handling for SIGTERM
+# TODO: Implement pre-start script for model preloading
+# TODO: Add resource limits configuration (CPU, memory)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
 
 # Alternative commands (uncomment as needed):
