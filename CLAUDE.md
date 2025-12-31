@@ -58,7 +58,7 @@ RabbitRedux/
 ├── wsgi.py                           # WSGI entry for production
 ├── Dockerfile                        # Docker configuration
 ├── requirements.txt                  # Python dependencies
-├── .gitingnore                       # Git ignore (note: typo in filename)
+├── .gitingnore                       # Git ignore (misspelled, should be .gitignore)
 ├── LICENSE.md
 └── README.md
 ```
