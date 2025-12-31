@@ -291,8 +291,16 @@ All API endpoints follow this pattern:
 Environment-based configuration:
 ```python
 # app/config.py
-DEBUG = os.getenv("FLASK_DEBUG", False)
-TESTING = os.getenv("TESTING", False)
+def str_to_bool(value):
+    """Convert string to boolean."""
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return value.lower() in ('true', '1', 'yes', 'on')
+
+DEBUG = str_to_bool(os.getenv("FLASK_DEBUG", "False"))
+TESTING = str_to_bool(os.getenv("TESTING", "False"))
 
 # SECRET_KEY must be set in production, but allow a default for testing
 SECRET_KEY = os.getenv("SECRET_KEY")

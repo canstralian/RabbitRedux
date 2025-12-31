@@ -1,8 +1,16 @@
 import os
 
+def str_to_bool(value):
+    """Convert string to boolean."""
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return value.lower() in ('true', '1', 'yes', 'on')
+
 class Config:
-    DEBUG = os.getenv("FLASK_DEBUG", False)
-    TESTING = os.getenv("TESTING", False)
+    DEBUG = str_to_bool(os.getenv("FLASK_DEBUG", "False"))
+    TESTING = str_to_bool(os.getenv("TESTING", "False"))
     
     # SECRET_KEY must be set in production, but allow a default for testing
     SECRET_KEY = os.getenv("SECRET_KEY")
