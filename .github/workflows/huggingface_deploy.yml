@@ -1,4 +1,7 @@
 name: Deploy Model to HuggingFace Hub
+# TODO: Add automated model testing before deployment
+# TODO: Implement blue-green deployment strategy
+# TODO: Add performance benchmarking in deployment workflow
 
 on:
   workflow_dispatch:  # Manual trigger
@@ -47,6 +50,8 @@ jobs:
         pip install huggingface-hub transformers torch
 
     - name: Verify HuggingFace credentials
+      # TODO: Add credential rotation mechanism
+      # TODO: Implement secret scanning before deployment
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
@@ -79,6 +84,9 @@ jobs:
         ls -la "$MODEL_PATH"
 
     - name: Deploy to HuggingFace Hub
+      # TODO: Add deployment approval step for production models
+      # TODO: Implement rollback mechanism on deployment failure
+      # TODO: Add smoke tests after deployment
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |

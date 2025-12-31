@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     # Security
     secret_key: str = Field(default="insecure-default-key", description="Secret key for JWT")
     api_key: Optional[str] = Field(default=None, description="API key for authentication")
+    # TODO: Implement JWT-based authentication for user sessions
+    # TODO: Add support for multiple API keys with different permission levels
     allowed_origins: str = Field(
         default="http://localhost:3000,http://localhost:8000",
         description="CORS allowed origins (comma-separated)"
@@ -37,6 +39,8 @@ class Settings(BaseSettings):
     model_cache_dir: str = Field(default="./model_cache", description="Model cache directory")
     max_model_length: int = Field(default=512, description="Maximum token length")
     enable_gpu: bool = Field(default=True, description="Enable GPU if available")
+    # TODO: Add model quantization options (int8, int4) for memory efficiency
+    # TODO: Support multiple model backends (ONNX, TensorRT, OpenVINO)
 
     # HuggingFace Configuration
     hf_token: Optional[str] = Field(default=None, description="HuggingFace API token")
@@ -60,9 +64,13 @@ class Settings(BaseSettings):
     redis_port: int = Field(default=6379, description="Redis port")
     redis_db: int = Field(default=0, description="Redis database number")
     redis_password: Optional[str] = Field(default=None, description="Redis password")
+    # TODO: Implement Redis Sentinel support for high availability
+    # TODO: Add Redis cluster mode for horizontal scaling
 
     # Database (Optional)
     database_url: str = Field(default="sqlite:///./rabbitredux.db", description="Database URL")
+    # TODO: Add database migration support with Alembic
+    # TODO: Implement query result caching for frequently accessed data
 
     # Performance
     max_batch_size: int = Field(default=32, description="Maximum batch size for classification")
@@ -74,6 +82,8 @@ class Settings(BaseSettings):
     enable_model_versioning: bool = Field(default=True, description="Enable model versioning")
     enable_authentication: bool = Field(default=False, description="Enable authentication")
     require_api_key: bool = Field(default=False, description="Require API key for all requests")
+    # TODO: Add feature flags for A/B testing different model configurations
+    # TODO: Implement gradual rollout controls for new features
 
     @validator("allowed_origins")
     def parse_allowed_origins(cls, v):

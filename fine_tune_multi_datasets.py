@@ -4,14 +4,21 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trai
 from sklearn.metrics import accuracy_score, f1_score
 
 # Set up logging
+# TODO: Add structured logging with JSON format for better analysis
+# TODO: Implement logging to external service (e.g., CloudWatch, DataDog)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 try:
     # Load tokenizer
+    # TODO: Add support for custom tokenizers
+    # TODO: Implement tokenizer caching for faster loading
     tokenizer = AutoTokenizer.from_pretrained('WhiteRabbitNeo/Code-Classification-Model')
 
     # Load datasets
+    # TODO: Add dataset versioning and reproducibility tracking
+    # TODO: Implement dataset validation and quality checks
+    # TODO: Add support for custom datasets via configuration
     datasets = {
         'WRN-Chapter-1': load_dataset('WhiteRabbitNeo/WRN-Chapter-1'),
         'WRN-Chapter-2': load_dataset('WhiteRabbitNeo/WRN-Chapter-2'),
@@ -34,6 +41,9 @@ try:
     model = AutoModelForSequenceClassification.from_pretrained('WhiteRabbitNeo/Code-Classification-Model', num_labels=2)
 
     # Define training arguments with mixed precision training
+    # TODO: Add hyperparameter tuning with Optuna or Ray Tune
+    # TODO: Implement gradient accumulation for larger effective batch sizes
+    # TODO: Add distributed training support for multi-GPU setups
     training_args = TrainingArguments(
         output_dir='./results',
         evaluation_strategy='epoch',

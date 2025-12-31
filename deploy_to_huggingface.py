@@ -36,6 +36,9 @@ def create_model_card(
     Returns:
         Model card content as string
     """
+    # TODO: Add automated model card generation using model-card-toolkit
+    # TODO: Include training hyperparameters and dataset statistics
+    # TODO: Add ethical considerations and bias analysis sections
     metrics_section = ""
     if accuracy or f1_score:
         metrics_section = "## Performance Metrics\n\n"
@@ -159,6 +162,10 @@ def deploy_model(
         accuracy: Optional model accuracy
         f1_score: Optional model F1 score
     """
+    # TODO: Add model validation before deployment (size, format, inference test)
+    # TODO: Implement model versioning with tags and releases
+    # TODO: Add rollback capability for failed deployments
+    # TODO: Include model performance benchmarks in deployment metadata
     model_path = Path(model_path)
 
     if not model_path.exists():

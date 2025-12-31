@@ -70,6 +70,9 @@ class TestHealthEndpoint:
 
 class TestClassificationEndpoint:
     """Tests for the single classification endpoint."""
+    # TODO: Add performance benchmarking tests for classification speed
+    # TODO: Test model fallback behavior when primary model fails
+    # TODO: Add tests for various code languages (Python, JS, Go, etc.)
 
     @patch('main.classify_code')
     def test_classify_success(self, mock_classify):
@@ -148,6 +151,9 @@ class TestClassificationEndpoint:
 
 class TestBatchClassificationEndpoint:
     """Tests for the batch classification endpoint."""
+    # TODO: Add stress tests with maximum batch sizes
+    # TODO: Test memory usage during large batch processing
+    # TODO: Add tests for batch timeout handling
 
     @patch('main.classify_batch')
     def test_batch_classify_success(self, mock_batch):
@@ -269,6 +275,9 @@ class TestAuthentication:
 
 class TestRateLimiting:
     """Tests for rate limiting functionality."""
+    # TODO: Add tests for distributed rate limiting with Redis
+    # TODO: Test rate limit behavior across multiple API keys
+    # TODO: Add tests for rate limit header responses (X-RateLimit-*)
 
     @pytest.mark.skipif(
         not settings.rate_limit_enabled,
@@ -297,6 +306,9 @@ class TestRateLimiting:
 
 class TestErrorHandling:
     """Tests for error handling and edge cases."""
+    # TODO: Add tests for timeout scenarios
+    # TODO: Test circuit breaker behavior for repeated failures
+    # TODO: Add tests for malformed/malicious code inputs
 
     def test_invalid_json(self):
         """Test handling of invalid JSON."""
@@ -384,6 +396,9 @@ class TestModelVersioning:
 
 
 # Pytest fixtures
+# TODO: Add fixtures for different model configurations
+# TODO: Create fixtures for test data generation (various code samples)
+# TODO: Add database fixtures if persistence is implemented
 @pytest.fixture(autouse=True)
 def reset_rate_limits():
     """Reset rate limits between tests."""

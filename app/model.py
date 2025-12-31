@@ -12,6 +12,8 @@ import torch
 logger = logging.getLogger(__name__)
 
 # Global model cache
+# TODO: Replace global dict with LRU cache with size limits
+# TODO: Add model cache persistence to disk for faster restarts
 _model_cache: Dict[str, Any] = {}
 
 
@@ -25,6 +27,9 @@ class ModelConfig:
     ]
     MAX_LENGTH = 512
     DEVICE = 0 if torch.cuda.is_available() else -1  # GPU if available
+    # TODO: Add support for multi-GPU inference with model parallelism
+    # TODO: Implement automatic mixed precision (AMP) for faster inference
+    # TODO: Add ONNX runtime support for optimized CPU inference
 
 
 @lru_cache(maxsize=3)
@@ -42,6 +47,9 @@ def load_classifier(model_name: str = ModelConfig.DEFAULT_MODEL, version: Option
     Raises:
         Exception: If model loading fails
     """
+    # TODO: Add model compilation with torch.compile() for PyTorch 2.0+
+    # TODO: Implement model warmup with sample inputs after loading
+    # TODO: Add telemetry for model load times and success rates
     cache_key = f"{model_name}:{version or 'latest'}"
 
     if cache_key in _model_cache:
@@ -98,6 +106,9 @@ def classify_code(classifier, code_snippet: str, return_all_scores: bool = False
     Returns:
         Dictionary with classification results
     """
+    # TODO: Add preprocessing for code normalization (remove comments, whitespace)
+    # TODO: Implement ensemble predictions with multiple models
+    # TODO: Add explanation/attribution support using SHAP or LIME
     try:
         result = classifier(
             code_snippet,
@@ -142,6 +153,9 @@ def classify_batch(classifier, code_snippets: List[str], return_all_scores: bool
     Returns:
         List of classification results
     """
+    # TODO: Implement adaptive batch sizing based on GPU memory usage
+    # TODO: Add batch splitting for very large inputs
+    # TODO: Support async batch processing with progress callbacks
     try:
         results = classifier(
             code_snippets,
