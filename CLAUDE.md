@@ -44,7 +44,7 @@ RabbitRedux/
 │   ├── train_adamw.py               # AdamW optimizer
 │   ├── train_swa.py                 # Stochastic Weight Averaging
 │   ├── train_mixed_precision.py     # FP16 training
-│   └── train_ir_scheduler.py        # Learning rate scheduling
+│   └── train_lr_scheduler.py        # Learning rate scheduling
 │
 ├── tests/                            # Test suite
 │   └── test_api.py                  # API endpoint tests (4 test cases)
