@@ -382,11 +382,12 @@ flake8 .
 
 ### Model References
 
-The codebase references multiple model names:
+The codebase references two related model names:
 - `canstralian/RabbitRedux` (in README.md)
 - `canstralian/WhiteRabbitNeo` (in routes.py, classifier.py)
 
-**Action Required**: Verify which model is the canonical version.
+**Canonical model**: Use `canstralian/RabbitRedux` as the primary/production model for all new deployments, examples, and configuration.
+`canstralian/WhiteRabbitNeo` is the upstream/base model used during pretraining and appears in dataset names and some legacy code; reference it only when you explicitly need to discuss the base checkpoint or training lineage.
 
 ### Training Datasets
 
