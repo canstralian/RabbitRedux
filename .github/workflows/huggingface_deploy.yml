@@ -1,40 +1,121 @@
-name: Deploy to Hugging Face
+name: Deploy Model to HuggingFace Hub
 
 on:
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      model_path:
+        description: 'Path to trained model directory'
+        required: true
+        default: './trained_model'
+      repo_id:
+        description: 'HuggingFace repository ID'
+        required: true
+        default: 'canstralian/RabbitRedux'
+      commit_message:
+        description: 'Commit message for model upload'
+        required: false
+        default: 'Upload trained model'
+      private:
+        description: 'Make repository private'
+        required: false
+        default: 'false'
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    # Only deploy on tagged releases
+    tags:
+      - 'model-v*'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production  # Requires approval for production deployments
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.10'
+        cache: 'pip'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install huggingface_hub
+        pip install huggingface-hub transformers torch
 
-    - name: Deploy to Hugging Face
+    - name: Verify HuggingFace credentials
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
         python -c "
         from huggingface_hub import HfApi
+        import os
         api = HfApi()
-        api.upload_folder(
-          folder_path='path/to/your/model', 
-          repo_id='canstralian/your-model-name', 
-          token=os.getenv('HF_TOKEN')
-        )
+        token = os.getenv('HF_TOKEN')
+        if not token:
+            raise ValueError('HF_TOKEN secret not configured')
+        try:
+            user = api.whoami(token=token)
+            print(f'✅ Authenticated as: {user[\"name\"]}')
+        except Exception as e:
+            print(f'❌ Authentication failed: {e}')
+            raise
         "
+
+    - name: Check model directory
+      run: |
+        MODEL_PATH="${{ github.event.inputs.model_path || './trained_model' }}"
+        if [ ! -d "$MODEL_PATH" ]; then
+          echo "❌ Model directory not found: $MODEL_PATH"
+          echo "Available directories:"
+          ls -la
+          exit 1
+        fi
+        echo "✅ Model directory found: $MODEL_PATH"
+        echo "Contents:"
+        ls -la "$MODEL_PATH"
+
+    - name: Deploy to HuggingFace Hub
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        MODEL_PATH="${{ github.event.inputs.model_path || './trained_model' }}"
+        REPO_ID="${{ github.event.inputs.repo_id || 'canstralian/RabbitRedux' }}"
+        COMMIT_MSG="${{ github.event.inputs.commit_message || 'Upload trained model' }}"
+        PRIVATE="${{ github.event.inputs.private || 'false' }}"
+
+        python deploy_to_huggingface.py \
+          --model-path "$MODEL_PATH" \
+          --repo-id "$REPO_ID" \
+          --commit-message "$COMMIT_MSG" \
+          $( [ "$PRIVATE" = "true" ] && echo "--private" )
+
+    - name: Create deployment summary
+      if: success()
+      run: |
+        REPO_ID="${{ github.event.inputs.repo_id || 'canstralian/RabbitRedux' }}"
+        echo "## ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Model deployed to: https://huggingface.co/$REPO_ID" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Usage" >> $GITHUB_STEP_SUMMARY
+        echo '```python' >> $GITHUB_STEP_SUMMARY
+        echo 'from transformers import pipeline' >> $GITHUB_STEP_SUMMARY
+        echo "classifier = pipeline('text-classification', model='$REPO_ID')" >> $GITHUB_STEP_SUMMARY
+        echo 'result = classifier("your code here")' >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "## ❌ Deployment Failed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Check the logs above for error details." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Common issues:" >> $GITHUB_STEP_SUMMARY
+        echo "- HF_TOKEN secret not configured" >> $GITHUB_STEP_SUMMARY
+        echo "- Model directory not found" >> $GITHUB_STEP_SUMMARY
+        echo "- Invalid repository permissions" >> $GITHUB_STEP_SUMMARY
