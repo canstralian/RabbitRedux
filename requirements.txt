@@ -3,3 +3,7 @@ requests
 flask 
 transformers 
 torch
+sqlalchemy>=2.0.0
+alembic>=1.17.0
+psycopg2-binary>=2.9.0
+python-dotenv>=1.0.0

@@ -10,6 +10,8 @@ npm-debug.log
 
 # Environment variables
 .env
+.env.local
+.env.*.local
 
 # Logs
 logs/
@@ -18,3 +20,17 @@ logs/
 # Build artifacts
 dist/
 build/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backups
+backups/
+*.sql
+*.sql.gz
+*.dump
+
+# Alembic
+alembic/versions/__pycache__/
